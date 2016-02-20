@@ -4,7 +4,7 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
+import java.util.*;
 
 public class Eightpuzzle extends JFrame{
 	public static int array[][] = new int[3][3];
@@ -18,9 +18,38 @@ public class Eightpuzzle extends JFrame{
 		System.out.println(findEmptyTile(state.array).getRow()+","+findEmptyTile(state.array).getCol());
 		drawArray(state.array);
 	}
+	
+	
+	public static boolean goalTest(EPuzzleState state){
+		int num=1;
+		for (int i=0;i<3;i++){
+			for (int j=0; j<3; j++){
+				if (state.array[i][j]!=num){
+					return false;
+				}
+				num++;
+			}
+		}
+		return true;
+	}
+	
+	public static ArrayList<Integer> getAdjacentTiles(EPuzzleState state){
+		
+		ArrayList <Integer> adjacentTiles = new ArrayList<Integer>();
+		
+		int i = findEmptyTile(state.array).getRow();
+		int j = findEmptyTile(state.array).getCol();
+		
+		adjacentTiles.add(state.array[i-1][j]);
+		adjacentTiles.add(state.array[i][j-1]);
+		adjacentTiles.add(state.array[i+1][j]);
+		adjacentTiles.add(state.array[i][j+1]);
+		
+		return adjacentTiles;
+	}
+	
 	public static int getManhattan(int [][] array){
 		int totalcost=0;
-		int num;
 		for (int i=0; i<3; i++){
 			for (int j=0; j<3; j++){
 				if (array[i][j]==1){
