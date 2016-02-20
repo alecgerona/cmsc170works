@@ -15,6 +15,7 @@ public class Eightpuzzle extends JFrame{
 		drawStage();
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0);
 		System.out.println(getManhattan(array));
+		System.out.println(findEmptyTile(array).getRow()+","+findEmptyTile(array).getCol());
 	}
 	public static int getManhattan(int [][] array){
 		int totalcost=0;
@@ -44,6 +45,54 @@ public class Eightpuzzle extends JFrame{
 		}
 		return totalcost;
 
+	}
+	
+	public static void result(int [][] array, int actionTile){
+		
+	}
+	
+	public static Coordinate findEmptyTile(int [][] array){
+		Coordinate coord = new Coordinate(0, 0);
+		
+		for (int i=0; i<3; i++){
+			for (int j=0; j<3; j++){
+				if(array[i][j]==9){
+					
+					coord.setRow(i);
+					coord.setCol(j);
+					break;
+				}
+			}
+		}
+		
+		return coord;
+	}
+	
+	public static class Coordinate{
+		public int row;
+		public int col;
+		
+		
+		public Coordinate(int row, int col){
+			row = this.row;
+			col = this.col;
+		}
+		
+				
+		public void setRow(int row){
+			this.row = row;
+		}
+		public void setCol(int col){
+			this.col = col;
+		}
+		
+		public int getRow(){
+			return row;
+		}
+		public int getCol(){
+			return col;
+		}
+		
 	}
 
 	public static void drawArray(int [][] array){
