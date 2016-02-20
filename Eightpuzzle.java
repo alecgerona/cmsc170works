@@ -13,10 +13,12 @@ public class Eightpuzzle extends JFrame{
 
 	public static void main (String args[]){
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0);
-		drawStage(state.array);
-		System.out.println(getManhattan(state.array));
-		System.out.println(findEmptyTile(state.array).getRow()+","+findEmptyTile(state.array).getCol());
-		drawArray(state.array);
+		personalizeArray(state.getArray());
+		System.out.println(getManhattan(state.getArray()));
+		System.out.println(findEmptyTile(state.getArray()).getRow()+","+findEmptyTile(state.getArray()).getCol());
+		
+		drawArray(result(state, 8).getArray());
+		
 	}
 	
 	
@@ -79,15 +81,16 @@ public class Eightpuzzle extends JFrame{
 	
 	public static EPuzzleState result(EPuzzleState state, int actionTile){
 		
-		
+		int emptyRow = findEmptyTile(state.array).getRow();
+		int emptyCol = findEmptyTile(state.array).getCol();
 		for (int i=0; i<3; i++){
 			for (int j=0; j<3; j++){
-				if(state.array[i][j]==actionTile){
-					state.array[i][j]=9;
+				if(state.getArray()[i][j]==actionTile){
+					state.getArray()[i][j]=9;
 				}
 			}
 		}
-		state.array[findEmptyTile(state.array).getRow()][findEmptyTile(state.array).getCol()] = actionTile;
+		state.array[emptyRow][emptyCol]=actionTile;
 		
 		return state;
 		
@@ -148,7 +151,7 @@ public class Eightpuzzle extends JFrame{
 		}
 	}
 
-	public static void drawStage(int[][] array){
+	public static void initializeState(int[][] array){
 		int num=0;
 		Random rand = new Random();
 		initializeArray(array);
@@ -182,6 +185,18 @@ public class Eightpuzzle extends JFrame{
 		return false;
 	}
 
+	public static void personalizeArray(int [][] array){
+		int num=1;
+		for (int i=0; i<3; i++){
+			for (int j=0; j<3; j++){
+				
+				
+				array[i][j]=num;
+				num++;
+			}
+		}
+	}
+	
 	public static void initializeArray(int [][] array){
 		for (int i=0; i<3; i++){
 			for (int j=0; j<3; j++){
@@ -218,18 +233,18 @@ public class Eightpuzzle extends JFrame{
 			f = this.f;
 		}
 		
-		public int[][] getArray(int[][] array){
+		public int[][] getArray(){
 			return array;
 		}
 		
-		public int getG(int g){
+		public int getG(){
 			return g;
 		}
 		
-		public int getH(int h){
+		public int getH(){
 			return h;
 		}
-		public int getF(int f){
+		public int getF(){
 			return f;
 		}
 	}
