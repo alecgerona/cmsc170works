@@ -45,7 +45,14 @@ public class Eightpuzzle extends JFrame{
 			if(goalTest(bestNode)) return bestNode;
 			while(!getAdjacentTiles(bestNode).empty()){ //Expanding paths
 				actionTile = getAdjacentTiles(bestNode).pop();
+				cost++;
 				
+				if (!openList.contains(result(state,actionTile)) || !closedList.contains(result(state,actionTile)) ||
+						(openList.contains(result(state,actionTile)) || closedList.contains(result(state,actionTile))
+						&& true)){
+					
+					
+				}
 			}
 		}
 		return null;
@@ -157,6 +164,9 @@ public class Eightpuzzle extends JFrame{
 			}
 		}
 		state.array[emptyRow][emptyCol]=actionTile;
+		state.g = cost;
+		state.h = getManhattan(state.array);
+		state.f = state.g + state.h;
 		
 		return state;
 		
