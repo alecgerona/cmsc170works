@@ -12,10 +12,11 @@ public class Eightpuzzle extends JFrame{
 
 
 	public static void main (String args[]){
-		drawStage();
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0);
-		System.out.println(getManhattan(array));
-		System.out.println(findEmptyTile(array).getRow()+","+findEmptyTile(array).getCol());
+		drawStage(state.array);
+		System.out.println(getManhattan(state.array));
+		System.out.println(findEmptyTile(state.array).getRow()+","+findEmptyTile(state.array).getCol());
+		drawArray(state.array);
 	}
 	public static int getManhattan(int [][] array){
 		int totalcost=0;
@@ -47,7 +48,19 @@ public class Eightpuzzle extends JFrame{
 
 	}
 	
-	public static EpuzzleState result(int [][] array, int actionTile){
+	public static EPuzzleState result(EPuzzleState state, int actionTile){
+		
+		
+		for (int i=0; i<3; i++){
+			for (int j=0; j<3; j++){
+				if(state.array[i][j]==actionTile){
+					state.array[i][j]=9;
+				}
+			}
+		}
+		state.array[findEmptyTile(state.array).getRow()][findEmptyTile(state.array).getCol()] = actionTile;
+		
+		return state;
 		
 	}
 	
@@ -106,7 +119,7 @@ public class Eightpuzzle extends JFrame{
 		}
 	}
 
-	public static void drawStage(){
+	public static void drawStage(int[][] array){
 		int num=0;
 		Random rand = new Random();
 		initializeArray(array);
@@ -151,7 +164,7 @@ public class Eightpuzzle extends JFrame{
 	}
 
 	public static class EPuzzleState{
-		public int[][] array;
+		public int array[][] = new int[3][3];
 		public int g,h,f;
 		
 		public EPuzzleState(int[][] array, int g, int h, int f){
