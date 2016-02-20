@@ -1,5 +1,7 @@
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.awt.List;
+
 import javax.swing.*;
 
 import java.awt.*;
@@ -17,11 +19,46 @@ public class Eightpuzzle extends JFrame{
 		System.out.println(getManhattan(state.getArray()));
 		System.out.println(findEmptyTile(state.getArray()).getRow()+","+findEmptyTile(state.getArray()).getCol());
 		
+		carillon(state);
+		
 		drawArray(result(state, 8).getArray());
 		
 	}
 	
 	
+	public static void carillon(EPuzzleState state) {
+		
+		Stack <EPuzzleState> openList = new Stack<EPuzzleState>();
+		Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
+		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost);
+		
+		openList.push(state);
+		while(!openList.empty()){
+			bestNode = removeMinF(openList);
+		}
+		
+	}
+
+
+	private static EPuzzleState removeMinF(Stack<EPuzzleState> openList) {
+		Iterator<EPuzzleState> iter = openList.iterator();
+		LinkedList <Integer> listOfF = new LinkedList<Integer>();
+		
+		while (iter.hasNext()){
+		    listOfF.add(iter.next().f);
+		}
+		Collections.sort(listOfF);
+		
+		while (iter.hasNext()){
+			if(iter.next().f == listOfF.getLast()){
+				return iter.next();
+			}
+		}
+		
+		return null;
+	}
+
+
 	public static boolean goalTest(EPuzzleState state){
 		int num=1;
 		for (int i=0;i<3;i++){
@@ -35,17 +72,17 @@ public class Eightpuzzle extends JFrame{
 		return true;
 	}
 	
-	public static ArrayList<Integer> getAdjacentTiles(EPuzzleState state){
+	public static Stack<Integer> getAdjacentTiles(EPuzzleState state){
 		
-		ArrayList <Integer> adjacentTiles = new ArrayList<Integer>();
+		Stack <Integer> adjacentTiles = new Stack<Integer>();
 		
 		int i = findEmptyTile(state.array).getRow();
 		int j = findEmptyTile(state.array).getCol();
 		
-		adjacentTiles.add(state.array[i-1][j]);
-		adjacentTiles.add(state.array[i][j-1]);
-		adjacentTiles.add(state.array[i+1][j]);
-		adjacentTiles.add(state.array[i][j+1]);
+		adjacentTiles.push(state.array[i-1][j]);
+		adjacentTiles.push(state.array[i][j-1]);
+		adjacentTiles.push(state.array[i+1][j]);
+		adjacentTiles.push(state.array[i][j+1]);
 		
 		return adjacentTiles;
 	}
