@@ -47,9 +47,11 @@ public class Eightpuzzle extends JFrame{
 
 	}
 	
-	public static void result(int [][] array, int actionTile){
+	public static EpuzzleState result(int [][] array, int actionTile){
 		
 	}
+	
+	
 	
 	public static Coordinate findEmptyTile(int [][] array){
 		Coordinate coord = new Coordinate(0, 0);
@@ -172,6 +174,21 @@ public class Eightpuzzle extends JFrame{
 		}
 		public void setF(int f){
 			f = this.f;
+		}
+		
+		public int[][] getArray(int[][] array){
+			return array;
+		}
+		
+		public int getG(int g){
+			return g;
+		}
+		
+		public int getH(int h){
+			return h;
+		}
+		public int getF(int f){
+			return f;
 		}
 	}
 }
