@@ -63,15 +63,17 @@ public class Eightpuzzle extends JFrame{
 	private static EPuzzleState removeMinF(Stack<EPuzzleState> openList) {
 		Iterator<EPuzzleState> iter = openList.iterator();
 		LinkedList <Integer> listOfF = new LinkedList<Integer>();
+		EPuzzleState minF = new EPuzzleState(array, cost, cost, cost);
 		
 		while (iter.hasNext()){
 		    listOfF.add(iter.next().f); //Adds the F values of the openList's states.
 		}
 		Collections.sort(listOfF); //Sorts the Fs ascendingly.
-		
-		while (iter.hasNext()){
-			if(iter.next().f == listOfF.getLast()){ //Once the openList state with the highest F is found, return it.
-				return iter.next();
+		Iterator<EPuzzleState> iter2 = openList.iterator();
+		while (iter2.hasNext()){
+			minF = iter.next();
+			if(minF.f == listOfF.getLast()){ //Once the openList state with the highest F is found, return it.
+				return minF;
 			}
 		}
 		
