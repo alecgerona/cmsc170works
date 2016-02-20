@@ -26,7 +26,7 @@ public class Eightpuzzle extends JFrame{
 			System.out.println(sample.pop());
 		}
 		
-		//drawArray(carillon(state).array);
+		drawArray(carillon(state).array);
 		
 	}
 	
@@ -71,7 +71,7 @@ public class Eightpuzzle extends JFrame{
 		Collections.sort(listOfF); //Sorts the Fs ascendingly.
 		Iterator<EPuzzleState> iter2 = openList.iterator();
 		while (iter2.hasNext()){
-			minF = iter.next();
+			minF = iter2.next();
 			if(minF.f == listOfF.getLast()){ //Once the openList state with the highest F is found, return it.
 				return minF;
 			}
