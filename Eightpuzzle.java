@@ -15,27 +15,40 @@ public class Eightpuzzle extends JFrame{
 
 	public static void main (String args[]){
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0);
+		Stack <Integer> sample = new Stack<Integer>();
 		personalizeArray(state.getArray());
 		System.out.println(getManhattan(state.getArray()));
 		System.out.println(findEmptyTile(state.getArray()).getRow()+","+findEmptyTile(state.getArray()).getCol());
 		
-		carillon(state);
+		drawArray(state.array);
+		sample = getAdjacentTiles(state);
+		while (!sample.empty()){
+			System.out.println(sample.pop());
+		}
 		
-		drawArray(result(state, 8).getArray());
+		//drawArray(carillon(state).array);
 		
 	}
 	
 	
-	public static void carillon(EPuzzleState state) {
+	public static EPuzzleState carillon(EPuzzleState state) {
 		
 		Stack <EPuzzleState> openList = new Stack<EPuzzleState>();
 		Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
 		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost);
+		int actionTile;
 		
 		openList.push(state);
 		while(!openList.empty()){
 			bestNode = removeMinF(openList);
+			closedList.push(bestNode);
+			if(goalTest(bestNode)) return bestNode;
+			while(!getAdjacentTiles(bestNode).empty()){ //Expanding paths
+				actionTile = getAdjacentTiles(bestNode).pop();
+				
+			}
 		}
+		return null;
 		
 	}
 
@@ -45,12 +58,12 @@ public class Eightpuzzle extends JFrame{
 		LinkedList <Integer> listOfF = new LinkedList<Integer>();
 		
 		while (iter.hasNext()){
-		    listOfF.add(iter.next().f);
+		    listOfF.add(iter.next().f); //Adds the F values of the openList's states.
 		}
-		Collections.sort(listOfF);
+		Collections.sort(listOfF); //Sorts the Fs ascendingly.
 		
 		while (iter.hasNext()){
-			if(iter.next().f == listOfF.getLast()){
+			if(iter.next().f == listOfF.getLast()){ //Once the openList state with the highest F is found, return it.
 				return iter.next();
 			}
 		}
@@ -79,10 +92,26 @@ public class Eightpuzzle extends JFrame{
 		int i = findEmptyTile(state.array).getRow();
 		int j = findEmptyTile(state.array).getCol();
 		
-		adjacentTiles.push(state.array[i-1][j]);
-		adjacentTiles.push(state.array[i][j-1]);
-		adjacentTiles.push(state.array[i+1][j]);
-		adjacentTiles.push(state.array[i][j+1]);
+		try{
+			adjacentTiles.push(state.array[i-1][j]);
+		}
+		catch (Exception e){}
+		
+		try{
+			adjacentTiles.push(state.array[i][j-1]);
+		}
+		catch (Exception e){}
+		
+		try{
+			adjacentTiles.push(state.array[i+1][j]);
+		}
+		catch (Exception e){}
+		
+		try{
+			adjacentTiles.push(state.array[i][j+1]);
+		}
+		catch (Exception e){}
+		
 		
 		return adjacentTiles;
 	}
