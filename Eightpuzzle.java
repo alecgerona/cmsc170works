@@ -25,16 +25,29 @@ public class Eightpuzzle extends JFrame{
 		System.out.println(findEmptyTile(state.array).getRow()+","+findEmptyTile(state.array).getCol());
 		
 		drawArray(state.array);
-		drawArray(result(state,3).array);
+		/*drawArray(result(state,3).array);
+		copyMyArray(shitarray, state.array);
+		copyMyArray(shitarray2, result(state,3).array);*/
 		System.out.println("---------");
-		System.out.println(arrayOrder(state.array, result(state,3).array));
-		//drawArray(carillon(state).array);
+		//System.out.println(arrayOrder(shitarray, shitarray2));
+		drawArray(carillon(state).array);
 		System.out.println("Done motherfucker.");
 	}
 	
 	
+	private static void copyMyArray(int[][] shitarray, int[][] array) {
+		for (int i=0; i<3; i++){
+			for(int j=0; j<3; j++){
+				shitarray[i][j] = array[i][j];
+			}
+		}
+		
+	}
+
+
 	public static EPuzzleState carillon(EPuzzleState state) {
 		int array[][] = new int[3][3];
+		int[][] shitarray = new int[3][3];
 		Stack <EPuzzleState> openList = new Stack<EPuzzleState>();
 		Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
 		Stack <Integer> adjacentTiles = new Stack<Integer>();
@@ -53,23 +66,24 @@ public class Eightpuzzle extends JFrame{
 			adjacentTiles = getAdjacentTiles(bestNode);
 			while(!adjacentTiles.empty()){ //Expanding paths
 				actionTile = adjacentTiles.pop();
+				
+				
+				
+			/*	if (arrayCompare(openList, result(bestNode, actionTile))){
+					duplicated = result(bestNode, actionTile);
+				}
+				if (arrayCompare(closedList, result(bestNode, actionTile))){
+					duplicated = result(bestNode, actionTile);
+				}*/
+				
+				
 				if (count<5){
 						drawArray(result(bestNode, actionTile).array);
 						System.out.println(cost); 
 						count++;
 						}
-				
-				
-				if (arrayCompare(openList, result(bestNode, actionTile))){
-					duplicated = result(bestNode, actionTile);
-				}
-				if (arrayCompare(closedList, result(bestNode, actionTile))){
-					duplicated = result(bestNode, actionTile);
-				}
-				
-				if (!arrayCompare(openList, result(bestNode, actionTile)) || !arrayCompare(closedList, result(bestNode, actionTile)) ||
-						((arrayCompare(openList, result(bestNode, actionTile)) || arrayCompare(closedList, result(bestNode, actionTile)))
-						&& result(bestNode, actionTile).g < duplicated.g)){ 
+				copyMyArray(shitarray,result(bestNode,actionTile).array);
+				if (true){ 
 					/*
 					 * Checks whether the expanded path is not in the openList nor the closedList to include it. If it is, it checks
 					 * if its duplicate's cost is lower or higher to make the decision to include it or not.
@@ -91,15 +105,21 @@ public class Eightpuzzle extends JFrame{
 	}
 
 
-	private static boolean arrayCompare(Stack<EPuzzleState> openList, EPuzzleState result) {
+	private static boolean arrayCompare(Stack<EPuzzleState> openList, int[][] shitarray3) {
 		Iterator<EPuzzleState> iter = openList.iterator();
+		int [][]shitarray = new int[3][3];
+		int [][]shitarray2 = new int[3][3];
+		
 		int compareArray[][] = new int[3][3];
 		while (iter.hasNext()){
-			compareArray = iter.next().array;
-			if (arrayOrder(compareArray, result.array)){
+			//compareArray = iter.next().array;
+			copyMyArray(shitarray, iter.next().array);
+			copyMyArray(shitarray2, shitarray3);
+			if (arrayOrder(shitarray,shitarray2)){
 				return true;
 			}
 		}
+		System.out.println("damn");
 		return false;
 	}
 
@@ -136,6 +156,7 @@ public class Eightpuzzle extends JFrame{
 			//System.out.println(listOfF.getLast());
 			minF = iter2.next();
 			if(minF.f == listOfF.getFirst()){ //Once the openList state with the lowest F is found, return it.
+				openList.remove(0);
 				return minF;
 			}
 		}
