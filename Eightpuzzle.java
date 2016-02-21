@@ -9,34 +9,32 @@ import java.awt.event.*;
 import java.util.*;
 
 public class Eightpuzzle extends JFrame{
-	public static int array[][] = new int[3][3];
+	
 	public static int cost=0;
 	public static int count=0;
 
 
 	public static void main (String args[]){
+		int array[][] = new int[3][3];
+		int [][]shitarray = new int[3][3];
+		int [][]shitarray2 = new int[3][3];
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0, array);
 		Stack <Integer> sample = new Stack<Integer>();
-		personalizeArray(state.getArray());
-		System.out.println(getManhattan(state.getArray()));
-		System.out.println(findEmptyTile(state.getArray()).getRow()+","+findEmptyTile(state.getArray()).getCol());
+		personalizeArray(state.array);
+		System.out.println(getManhattan(state.array));
+		System.out.println(findEmptyTile(state.array).getRow()+","+findEmptyTile(state.array).getCol());
 		
 		drawArray(state.array);
+		drawArray(result(state,3).array);
 		System.out.println("---------");
-		/*sample = getAdjacentTiles(state);
-		while (!sample.empty()){
-			System.out.println(sample.pop());
-		}*/
-		
-		//goalTest(state);
-		
-		drawArray(carillon(state).array);
+		System.out.println(arrayOrder(state.array, result(state,3).array));
+		//drawArray(carillon(state).array);
 		System.out.println("Done motherfucker.");
 	}
 	
 	
 	public static EPuzzleState carillon(EPuzzleState state) {
-		
+		int array[][] = new int[3][3];
 		Stack <EPuzzleState> openList = new Stack<EPuzzleState>();
 		Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
 		Stack <Integer> adjacentTiles = new Stack<Integer>();
@@ -55,7 +53,11 @@ public class Eightpuzzle extends JFrame{
 			adjacentTiles = getAdjacentTiles(bestNode);
 			while(!adjacentTiles.empty()){ //Expanding paths
 				actionTile = adjacentTiles.pop();
-				
+				if (count<5){
+						drawArray(result(bestNode, actionTile).array);
+						System.out.println(cost); 
+						count++;
+						}
 				
 				
 				if (arrayCompare(openList, result(bestNode, actionTile))){
@@ -66,17 +68,17 @@ public class Eightpuzzle extends JFrame{
 				}
 				
 				if (!arrayCompare(openList, result(bestNode, actionTile)) || !arrayCompare(closedList, result(bestNode, actionTile)) ||
-						(arrayCompare(openList, result(bestNode, actionTile)) || arrayCompare(closedList, result(bestNode, actionTile))
+						((arrayCompare(openList, result(bestNode, actionTile)) || arrayCompare(closedList, result(bestNode, actionTile)))
 						&& result(bestNode, actionTile).g < duplicated.g)){ 
 					/*
 					 * Checks whether the expanded path is not in the openList nor the closedList to include it. If it is, it checks
 					 * if its duplicate's cost is lower or higher to make the decision to include it or not.
 					 */
 					
-					
+					System.out.println("shit");
 					
 					result(bestNode, actionTile).setParent(bestNode.array);	
-					openList.add(result(bestNode, actionTile));
+					openList.push(result(bestNode, actionTile));
 				
 					
 				}
@@ -91,8 +93,10 @@ public class Eightpuzzle extends JFrame{
 
 	private static boolean arrayCompare(Stack<EPuzzleState> openList, EPuzzleState result) {
 		Iterator<EPuzzleState> iter = openList.iterator();
+		int compareArray[][] = new int[3][3];
 		while (iter.hasNext()){
-			if (iter.next().array.equals(result.array)){
+			compareArray = iter.next().array;
+			if (arrayOrder(compareArray, result.array)){
 				return true;
 			}
 		}
@@ -100,7 +104,20 @@ public class Eightpuzzle extends JFrame{
 	}
 
 
+	private static boolean arrayOrder(int[][] compareArray, int[][] array2) {
+		for (int i=0; i<3; i++){
+			for (int j=0; j<3; j++){
+				if (compareArray[i][j] != array2[i][j]){
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+
 	private static EPuzzleState removeMinF(Stack<EPuzzleState> openList) {
+		int array[][] = new int[3][3];
 		Iterator<EPuzzleState> iter = openList.iterator();
 		LinkedList <Integer> listOfF = new LinkedList<Integer>();
 		int fuck;
@@ -275,6 +292,7 @@ public class Eightpuzzle extends JFrame{
 			}
 			System.out.println();
 		}
+		System.out.println();
 	}
 
 	public static void initializeState(int[][] array){
