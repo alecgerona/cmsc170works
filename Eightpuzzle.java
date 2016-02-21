@@ -11,6 +11,7 @@ import java.util.*;
 public class Eightpuzzle extends JFrame{
 	public static int array[][] = new int[3][3];
 	public static int cost=0;
+	public static int count=0;
 
 
 	public static void main (String args[]){
@@ -21,6 +22,7 @@ public class Eightpuzzle extends JFrame{
 		System.out.println(findEmptyTile(state.getArray()).getRow()+","+findEmptyTile(state.getArray()).getCol());
 		
 		drawArray(state.array);
+		System.out.println("---------");
 		/*sample = getAdjacentTiles(state);
 		while (!sample.empty()){
 			System.out.println(sample.pop());
@@ -29,7 +31,7 @@ public class Eightpuzzle extends JFrame{
 		//goalTest(state);
 		
 		drawArray(carillon(state).array);
-		
+		System.out.println("Done motherfucker.");
 	}
 	
 	
@@ -41,18 +43,19 @@ public class Eightpuzzle extends JFrame{
 		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost, array);
 		EPuzzleState duplicated = new EPuzzleState(array, cost, cost, cost, array);
 		int actionTile;
+		int fuck=0;
 		
 		openList.push(state);
 		while(!openList.empty()){
 			cost++;
 			bestNode = removeMinF(openList);
-			//drawArray(bestNode.array);
-			//System.out.println();
+			
 			closedList.push(bestNode);
 			if(goalTest(bestNode)) return bestNode;
 			adjacentTiles = getAdjacentTiles(bestNode);
 			while(!adjacentTiles.empty()){ //Expanding paths
 				actionTile = adjacentTiles.pop();
+				
 				
 				
 				if (arrayCompare(openList, result(bestNode, actionTile))){
@@ -71,11 +74,15 @@ public class Eightpuzzle extends JFrame{
 					 */
 					
 					
-					result(bestNode, actionTile).setParent(bestNode.array);
+					
+					result(bestNode, actionTile).setParent(bestNode.array);	
 					openList.add(result(bestNode, actionTile));
+				
 					
 				}
+				
 			}
+			
 		}
 		return null;
 		
@@ -85,7 +92,7 @@ public class Eightpuzzle extends JFrame{
 	private static boolean arrayCompare(Stack<EPuzzleState> openList, EPuzzleState result) {
 		Iterator<EPuzzleState> iter = openList.iterator();
 		while (iter.hasNext()){
-			if (iter.next().array == result.array){
+			if (iter.next().array.equals(result.array)){
 				return true;
 			}
 		}
@@ -96,18 +103,22 @@ public class Eightpuzzle extends JFrame{
 	private static EPuzzleState removeMinF(Stack<EPuzzleState> openList) {
 		Iterator<EPuzzleState> iter = openList.iterator();
 		LinkedList <Integer> listOfF = new LinkedList<Integer>();
+		int fuck;
 		EPuzzleState minF = new EPuzzleState(array, cost, cost, cost, array);
 		
 		while (iter.hasNext()){
-		    listOfF.add(iter.next().f); //Adds the F values of the openList's states.
+			fuck = iter.next().f;
+			
+		    listOfF.add(fuck); //Adds the F values of the openList's states.
 		}
-		Collections.sort(listOfF); //Sorts the Fs ascendingly.
+		Collections.sort(listOfF); //Sorts the Fs ascendingly
+		
 		
 		Iterator<EPuzzleState> iter2 = openList.iterator();
 		while (iter2.hasNext()){
 			//System.out.println(listOfF.getLast());
 			minF = iter2.next();
-			if(minF.f == listOfF.getLast()){ //Once the openList state with the highest F is found, return it.
+			if(minF.f == listOfF.getFirst()){ //Once the openList state with the lowest F is found, return it.
 				return minF;
 			}
 		}
@@ -197,8 +208,8 @@ public class Eightpuzzle extends JFrame{
 		int emptyCol = findEmptyTile(state.array).getCol();
 		for (int i=0; i<3; i++){
 			for (int j=0; j<3; j++){
-				if(state.getArray()[i][j]==actionTile){
-					state.getArray()[i][j]=9;
+				if(state.array[i][j]==actionTile){
+					state.array[i][j]=9;
 				}
 			}
 		}
