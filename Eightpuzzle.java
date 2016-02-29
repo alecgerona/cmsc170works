@@ -36,7 +36,7 @@ public class Eightpuzzle extends JFrame{
 	}
 	
 	
-	private static void copyMyArray(int[][] shitarray, int[][] array) {
+	public static void copyMyArray(int[][] shitarray, int[][] array) {
 		for (int i=0; i<3; i++){
 			for(int j=0; j<3; j++){
 				shitarray[i][j] = array[i][j];
@@ -49,9 +49,9 @@ public class Eightpuzzle extends JFrame{
 	public static EPuzzleState carillon(EPuzzleState state) {
 		int array[][] = new int[3][3];
 		int[][] shitarray = new int[3][3];
-		Stack <EPuzzleState> openList = new Stack<EPuzzleState>();
+		final Stack <EPuzzleState> openList = new Stack<EPuzzleState>();
 		Iterator<EPuzzleState> iter = openList.iterator();
-		Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
+		final Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
 		Stack <Integer> adjacentTiles = new Stack<Integer>();
 		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost, array);
 		EPuzzleState duplicated = new EPuzzleState(array, cost, cost, cost, array);
@@ -65,18 +65,21 @@ public class Eightpuzzle extends JFrame{
 			
 			cost++;
 			for (int i=0; i<openList.size(); i++){
-				listOfF.add(openList.get(i).f);
-				//System.out.println(openList.get(i).f);
+				listOfF.add(openList.get(i).getF());
 			}
 			Collections.sort(listOfF);
 			for (int i=0; i<openList.size(); i++){
-				if (openList.get(i).f == listOfF.getFirst()) {
+				drawArray(openList.get(i).getArray());
+				if (openList.get(i).getF() == listOfF.getFirst()) {
 					bestNode = openList.get(i);
+					System.out.println(openList.get(i).getF());
+					fuck = i;
 					openList.remove(i);
 					break;
 				}
 					
 			}
+			listOfF.clear();
 			
 			
 			closedList.push(bestNode);
@@ -84,25 +87,28 @@ public class Eightpuzzle extends JFrame{
 			count++;
 			
 			if (count==5) return null;
+			
 			adjacentTiles = getAdjacentTiles(bestNode);
+			
 			while(!adjacentTiles.empty()){ //Expanding paths
 				actionTile = adjacentTiles.pop();
 				
 				
 				EPuzzleState temp = result(bestNode,actionTile);
-				copyMyArray(shitarray,temp.array);
+				copyMyArray(shitarray,temp.getArray());
 				
 				if (!arrayCompare(openList, shitarray) || !arrayCompare(closedList, shitarray) ||
 						(arrayCompare(openList, shitarray) || arrayCompare(closedList, shitarray)
-						&& temp.g < duplicated.g)){ 
+						&& temp.getG() < duplicated.getG())){ 
 					/*
 					 * Checks whether the expanded path is not in the openList nor the closedList to include it. If it is, it checks
 					 * if its duplicate's cost is lower or higher to make the decision to include it or not.
 					 */
 					
-					temp.setParent(bestNode.array);	
+					temp.setParent(bestNode.getArray());	
 					openList.add(temp);
-					System.out.println(temp.f);
+					//drawArray(temp.getArray());
+					//System.out.println(temp.getF());
 				}
 				
 			}
@@ -110,6 +116,15 @@ public class Eightpuzzle extends JFrame{
 		}
 		return null;
 		
+	}
+
+
+	private static void copyMyState(EPuzzleState bestNode, EPuzzleState toBeCopied) {
+		copyMyArray(bestNode.getArray(), toBeCopied.getArray());
+		bestNode.setG(toBeCopied.getG());
+		bestNode.setH(toBeCopied.getH());
+		bestNode.setF(toBeCopied.getF());
+		copyMyArray(bestNode.getParent(), toBeCopied.getParent());
 	}
 
 
@@ -121,7 +136,7 @@ public class Eightpuzzle extends JFrame{
 		int compareArray[][] = new int[3][3];
 		while (iter.hasNext()){
 			//compareArray = iter.next().array;
-			copyMyArray(shitarray, iter.next().array);
+			copyMyArray(shitarray, iter.next().getArray());
 			copyMyArray(shitarray2, shitarray3);
 			if (arrayOrder(shitarray,shitarray2)){
 				return true;
@@ -181,7 +196,7 @@ public class Eightpuzzle extends JFrame{
 		for (int i=0;i<3;i++){
 			for (int j=0; j<3; j++){
 				//System.out.println(state.array[i][j]);
-				if (state.array[i][j]!=num){
+				if (state.getArray()[i][j]!=num){
 					
 					return false;
 				}
@@ -195,26 +210,26 @@ public class Eightpuzzle extends JFrame{
 		
 		Stack <Integer> adjacentTiles = new Stack<Integer>();
 		
-		int i = findEmptyTile(state.array).getRow();
-		int j = findEmptyTile(state.array).getCol();
+		int i = findEmptyTile(state.getArray()).getRow();
+		int j = findEmptyTile(state.getArray()).getCol();
 		
 		try{
-			adjacentTiles.push(state.array[i-1][j]);
+			adjacentTiles.push(state.getArray()[i-1][j]);
 		}
 		catch (Exception e){}
 		
 		try{
-			adjacentTiles.push(state.array[i][j-1]);
+			adjacentTiles.push(state.getArray()[i][j-1]);
 		}
 		catch (Exception e){}
 		
 		try{
-			adjacentTiles.push(state.array[i+1][j]);
+			adjacentTiles.push(state.getArray()[i+1][j]);
 		}
 		catch (Exception e){}
 		
 		try{
-			adjacentTiles.push(state.array[i][j+1]);
+			adjacentTiles.push(state.getArray()[i][j+1]);
 		}
 		catch (Exception e){}
 		
@@ -252,23 +267,23 @@ public class Eightpuzzle extends JFrame{
 	}
 	
 	public static EPuzzleState result(EPuzzleState state, int actionTile){
-		EPuzzleState newState = new EPuzzleState(null, 0, 0, 0, null);
-		newState = state;
-		int emptyRow = findEmptyTile(state.array).getRow();
-		int emptyCol = findEmptyTile(state.array).getCol();
+		EPuzzleState newState = new EPuzzleState(state.getArray(), state.getG(), state.getH(), state.getF(), state.getParent());
+		
+		int emptyRow = findEmptyTile(newState.getArray()).getRow();
+		int emptyCol = findEmptyTile(newState.getArray()).getCol();
 		for (int i=0; i<3; i++){
 			for (int j=0; j<3; j++){
-				if(state.array[i][j]==actionTile){
-					state.array[i][j]=9;
+				if(newState.getArray()[i][j]==actionTile){
+					newState.getArray()[i][j]=9;
 				}
 			}
 		}
-		state.array[emptyRow][emptyCol]=actionTile;
-		state.g = cost;
-		state.h = getManhattan(state.array);
-		state.f = state.g + state.h;
+		newState.setArray(emptyRow,emptyCol,actionTile);
+		newState.setG(cost);
+		newState.setH(getManhattan(newState.getArray()));
+		newState.setF(newState.getG() + newState.getH());
 		
-		return state;
+		return newState;
 		
 	}
 	
@@ -386,51 +401,5 @@ public class Eightpuzzle extends JFrame{
 		}
 	}
 
-	public static class EPuzzleState{
-		public int array[][] = new int[3][3];
-		public int parent[][] = new int[3][3];
-		public int g,h,f;
-		
-		public EPuzzleState(int[][] array, int g, int h, int f, int [][] parent){
-			array = this.array;
-			g = this.g;
-			h = this.h;
-			f = this.f;
-			parent = this.parent;
-		}
-		
-		public void setArray(int[][] array){
-			array = this.array;
-		}
-		
-		public void setG(int g){
-			g = this.g;
-		}
-		
-		public void setH(int h){
-			h = this.h;
-		}
-		public void setF(int f){
-			f = this.f;
-		}
-		
-		public void setParent(int[][] parent){
-			parent = this.parent;
-		}
-		
-		public int[][] getArray(){
-			return array;
-		}
-		
-		public int getG(){
-			return g;
-		}
-		
-		public int getH(){
-			return h;
-		}
-		public int getF(){
-			return f;
-		}
-	}
+	
 }
