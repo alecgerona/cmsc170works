@@ -62,9 +62,11 @@ public class Eightpuzzle extends JFrame{
 		
 		openList.push(state);
 		while(!openList.empty()){
+			
 			cost++;
 			for (int i=0; i<openList.size(); i++){
 				listOfF.add(openList.get(i).f);
+				//System.out.println(openList.get(i).f);
 			}
 			Collections.sort(listOfF);
 			for (int i=0; i<openList.size(); i++){
@@ -100,6 +102,7 @@ public class Eightpuzzle extends JFrame{
 					
 					temp.setParent(bestNode.array);	
 					openList.add(temp);
+					System.out.println(temp.f);
 				}
 				
 			}
