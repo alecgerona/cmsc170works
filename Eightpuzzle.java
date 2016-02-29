@@ -21,21 +21,27 @@ public class Eightpuzzle extends JFrame{
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0, null);
 		Stack <Integer> sample = new Stack<Integer>();
 		personalizeArray(state.array);
-		System.out.println(getManhattan(state.array));
-		System.out.println(findEmptyTile(state.array).getRow()+","+findEmptyTile(state.array).getCol());
 		
-		drawArray(state.array);
-		drawArray(result(state,3).array);
-		copyMyArray(shitarray, state.array);
-		copyMyArray(shitarray2, result(state,3).array);
-		
-		System.out.println("---------");
-		//System.out.println(arrayOrder(shitarray, shitarray2));
-		drawArray(carillon(state).array);
+		//drawArray(carillon(state).array);
+		printResult(carillon(state));
 		System.out.println("Done motherfucker.");
 	}
 	
 	
+	private static void printResult(EPuzzleState state) {
+		Stack <EPuzzleState> steps = new Stack <EPuzzleState>();
+		while (state.getParent() != null){
+			steps.push(state.getParent());
+			state = state.getParent();
+		}
+		
+		while(!steps.empty()){
+			drawArray(steps.pop().getArray());
+			System.out.println(">>>>");
+		}
+	}
+
+
 	public static void copyMyArray(int[][] shitarray, int[][] array) {
 		for (int i=0; i<3; i++){
 			for(int j=0; j<3; j++){
@@ -53,8 +59,8 @@ public class Eightpuzzle extends JFrame{
 		Iterator<EPuzzleState> iter = openList.iterator();
 		final Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
 		Stack <Integer> adjacentTiles = new Stack<Integer>();
-		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost, null);
-		EPuzzleState duplicated = new EPuzzleState(array, cost, cost, cost, null);
+		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost, state);
+		EPuzzleState duplicated = new EPuzzleState(array, cost, cost, cost, state);
 		LinkedList <Integer> listOfF = new LinkedList<Integer>();
 		int actionTile;
 		int fuck=0;
@@ -342,11 +348,11 @@ public class Eightpuzzle extends JFrame{
 		array[0][2] = 3;
 		
 		array[1][0] = 4;
-		array[1][1] = 5;
-		array[1][2] = 6;
+		array[1][1] = 6;
+		array[1][2] = 9;
 		
 		array[2][0] = 7;
-		array[2][1] = 9;
+		array[2][1] = 5;
 		array[2][2] = 8;
 	}
 	
