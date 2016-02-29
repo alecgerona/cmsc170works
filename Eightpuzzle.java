@@ -20,12 +20,8 @@ public class Eightpuzzle extends JFrame{
 
 	public static void main (String args[]){
 		int array[][] = new int[3][3];
-		int [][]shitarray = new int[3][3];
-		int [][]shitarray2 = new int[3][3];
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0, null);
-		Stack <Integer> sample = new Stack<Integer>();
-		personalizeArray(state.array);
-		
+		personalizeArray(state.array);	
 		//drawArray(carillon(state).array);
 		printResult(carillon(state));
 		System.out.println("Done motherfucker.");
