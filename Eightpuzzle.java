@@ -18,14 +18,13 @@ public class Eightpuzzle extends JFrame{
 	public static int count=0;
 
 
-	public static void main (String args[]){
+	/*public static void main (String args[]){
 		int array[][] = new int[3][3];
 		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0, null);
 		personalizeArray(state.array);	
 		//drawArray(carillon(state).array);
 		printResult(carillon(state));
-		System.out.println("Done motherfucker.");
-	}
+	}*/
 	
 	
 	private static void printResult(EPuzzleState state) {
