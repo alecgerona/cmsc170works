@@ -45,6 +45,10 @@ public class EPuzzleState {
 		return this.array;
 	}
 	
+	public int getArray(int i, int j){
+		return this.array[i][j];
+	}
+	
 	public int getG(){
 		return this.g;
 	}

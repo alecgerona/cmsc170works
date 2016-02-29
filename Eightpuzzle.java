@@ -6,6 +6,10 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 public class Eightpuzzle extends JFrame{
@@ -30,15 +34,42 @@ public class Eightpuzzle extends JFrame{
 	
 	private static void printResult(EPuzzleState state) {
 		Stack <EPuzzleState> steps = new Stack <EPuzzleState>();
+		BufferedWriter bw = null;
+		String answer = "";
+		File file = new File("8puzzle.out");
 		while (state.getParent() != null){
 			steps.push(state.getParent());
 			state = state.getParent();
 		}
 		
-		while(!steps.empty()){
-			drawArray(steps.pop().getArray());
-			System.out.println(">>>>");
+		try {
+			bw = new BufferedWriter(new FileWriter(file));
+			answer += "Initial \n";
+			while(!steps.empty()){
+				EPuzzleState temp = steps.pop();
+				for (int i=0; i<3; i++){
+					for (int j=0; j<3; j++){
+						answer += temp.getArray(i,j)+" ";
+					}
+					answer += "\n";
+				}
+				answer += "<<<>>>\n";
+			}
+			bw.write(answer, 0, answer.length());
+			
+		} catch (IOException e){
+			e.printStackTrace();
+		} finally {
+			try{
+				bw.close();
+			}
+			catch (Exception ee) {
+				ee.printStackTrace();
+			}
 		}
+		
+		
+		
 	}
 
 
