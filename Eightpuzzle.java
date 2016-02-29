@@ -18,7 +18,7 @@ public class Eightpuzzle extends JFrame{
 		int array[][] = new int[3][3];
 		int [][]shitarray = new int[3][3];
 		int [][]shitarray2 = new int[3][3];
-		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0, array);
+		EPuzzleState state = new EPuzzleState(array, cost,getManhattan(array),0, null);
 		Stack <Integer> sample = new Stack<Integer>();
 		personalizeArray(state.array);
 		System.out.println(getManhattan(state.array));
@@ -53,8 +53,8 @@ public class Eightpuzzle extends JFrame{
 		Iterator<EPuzzleState> iter = openList.iterator();
 		final Stack <EPuzzleState> closedList = new Stack<EPuzzleState>();
 		Stack <Integer> adjacentTiles = new Stack<Integer>();
-		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost, array);
-		EPuzzleState duplicated = new EPuzzleState(array, cost, cost, cost, array);
+		EPuzzleState bestNode = new EPuzzleState(array, cost, cost, cost, null);
+		EPuzzleState duplicated = new EPuzzleState(array, cost, cost, cost, null);
 		LinkedList <Integer> listOfF = new LinkedList<Integer>();
 		int actionTile;
 		int fuck=0;
@@ -69,10 +69,8 @@ public class Eightpuzzle extends JFrame{
 			}
 			Collections.sort(listOfF);
 			for (int i=0; i<openList.size(); i++){
-				drawArray(openList.get(i).getArray());
 				if (openList.get(i).getF() == listOfF.getFirst()) {
 					bestNode = openList.get(i);
-					System.out.println(openList.get(i).getF());
 					fuck = i;
 					openList.remove(i);
 					break;
@@ -105,7 +103,7 @@ public class Eightpuzzle extends JFrame{
 					 * if its duplicate's cost is lower or higher to make the decision to include it or not.
 					 */
 					
-					temp.setParent(bestNode.getArray());	
+					temp.setParent(bestNode);	
 					openList.add(temp);
 					//drawArray(temp.getArray());
 					//System.out.println(temp.getF());
@@ -118,14 +116,6 @@ public class Eightpuzzle extends JFrame{
 		
 	}
 
-
-	private static void copyMyState(EPuzzleState bestNode, EPuzzleState toBeCopied) {
-		copyMyArray(bestNode.getArray(), toBeCopied.getArray());
-		bestNode.setG(toBeCopied.getG());
-		bestNode.setH(toBeCopied.getH());
-		bestNode.setF(toBeCopied.getF());
-		copyMyArray(bestNode.getParent(), toBeCopied.getParent());
-	}
 
 
 	private static boolean arrayCompare(Stack<EPuzzleState> openList, int[][] shitarray3) {
@@ -158,37 +148,6 @@ public class Eightpuzzle extends JFrame{
 		return true;
 	}
 
-
-	private static EPuzzleState removeMinF(Stack<EPuzzleState> openList) {
-		int array[][] = new int[3][3];
-		int size = openList.size();
-		Iterator<EPuzzleState> iter = openList.iterator();
-		LinkedList <Integer> listOfF = new LinkedList<Integer>();
-		int fuck, currentF;
-		EPuzzleState minF = new EPuzzleState(array, cost, cost, cost, array);
-		
-		while (iter.hasNext()){
-			fuck = iter.next().f;
-			//System.out.println("Fs are "+fuck);
-		    listOfF.add(fuck); //Adds the F values of the openList's states.
-		}
-		
-		
-		Collections.sort(listOfF); //Sorts the Fs ascendingly
-		System.out.println(listOfF);
-		
-		Iterator<EPuzzleState> iter2 = openList.iterator();
-		while (iter2.hasNext()){
-			//System.out.println(listOfF.getLast());
-			minF = iter2.next();
-			if(minF.f == listOfF.getLast()){ //Once the openList state with the lowest F is found, return it.
-				openList.pop();
-				return minF;
-			}
-		}
-		
-		return null;
-	}
 
 
 	public static boolean goalTest(EPuzzleState state){

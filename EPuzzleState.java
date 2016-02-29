@@ -1,10 +1,10 @@
 
 public class EPuzzleState {
 	public int array[][] = new int[3][3];
-	public int parent[][] = new int[3][3];
+	public EPuzzleState parent;
 	public int g,h,f;
 	
-	public EPuzzleState(int[][] array, int g, int h, int f, int [][] parent){
+	public EPuzzleState(int[][] array, int g, int h, int f, EPuzzleState parent){
 //		array = this.array;
 //		g = this.g;
 //		h = this.h;
@@ -13,7 +13,7 @@ public class EPuzzleState {
 		this.g = g;
 		this.h= h;
 		this.f = f;
-		Eightpuzzle.copyMyArray(this.parent,parent);
+		this.parent = parent;
 		Eightpuzzle.copyMyArray(this.array, array);
 	}
 	
@@ -36,7 +36,7 @@ public class EPuzzleState {
 		this.f = f;
 	}
 	
-	public void setParent(int[][] parent){
+	public void setParent(EPuzzleState parent){
 //		parent = this.parent;
 		this.parent = parent;
 	}
@@ -55,7 +55,7 @@ public class EPuzzleState {
 	public int getF(){
 		return this.f;
 	}
-	public int[][] getParent(){
+	public EPuzzleState getParent(){
 		return this.parent;
 	}
 	
