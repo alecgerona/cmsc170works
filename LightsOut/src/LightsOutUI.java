@@ -26,9 +26,10 @@ public class LightsOutUI {
 		con.add(stage);
 		
 		Container conButtons = new Container();
-		conButtons.setLayout(new BorderLayout());
+		conButtons.setLayout(new GridLayout(1,2,0,0));
 		conButtons.add(solve);
 		conButtons.add(randomize);
+		
 		
 		randomize.addActionListener(new ActionListener(){
 
@@ -41,10 +42,15 @@ public class LightsOutUI {
 						
 					}
 				}
-				
-				
 			}
-			
+		});
+		
+		solve.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				Agent agent = new Agent(Stage.stageArray);
+			}
 		});
 		
 		frame.add(con, BorderLayout.CENTER);
