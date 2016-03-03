@@ -13,7 +13,6 @@ import java.util.*;
 public class Agent {
 	public Agent(Bulb[][] array){
 		State state = new State(array, null);
-		drawBoard(array);
 		graphSearh(state);
 	}
 
@@ -27,14 +26,22 @@ public class Agent {
 		while(!frontier.empty()){
 			path = frontier.pop();
 			explored.push(path);
+			System.out.println("wee");
 			if (goalTest(path)){
 				System.out.println("WIN");
 				return;
 			}
 			for (int i=0; i<5; i++){
 				for (int j=0; j<5; j++){
-					
+					State temp = new State(result(path,i,j).getArray(), result(path,i,j).getParent());
+//					if((!contain(temp, frontier) && !contain(temp, explored)) || goalTest(temp)){
+//						System.out.println("shit");
+//						frontier.push(temp);
+//					}
+					frontier.push(temp);
+//					drawBoard(temp.getArray());
 				}
+				return;
 			}
 		}
 		
@@ -42,8 +49,22 @@ public class Agent {
 		
 	}
 	
+	private boolean contain(State result, Stack<State> frontier) {
+		for (int a=0; a<frontier.size(); a++){
+			drawBoard(frontier.get(a).getArray());
+			System.out.println("fuck");
+			for (int i=0; i<5; i++){
+				for (int j=0; j<5; j++){
+					if (result.getArray()[i][j] != frontier.get(a).getArray()[i][j]) return false;
+				}
+			}
+		}
+//		System.out.println("fuck");
+		return true;
+	}
+
 	private State result(State path, int i, int j){
-		State resultPath = path;
+		State resultPath = new State(path.getArray(), path.getParent());
 		
 		try{
 			if (resultPath.getArray()[i][j].getFlag() == true){
@@ -94,7 +115,7 @@ public class Agent {
 				resultPath.getArray()[i][j+1].setBackground(Color.YELLOW);
 			}
 		} catch (Exception e){}
-		
+		drawBoard(resultPath.getArray());
 		return resultPath;
 		
 	}
